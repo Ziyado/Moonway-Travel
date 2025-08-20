@@ -1,481 +1,89 @@
-// Fix for: SyntaxError: /: Unexpected token (1:0)
-// Cause: The canvas was set to React, but the file contained a full HTML document (<!DOCTYPE html> ...),
-// which is invalid inside a React/JSX module. This rewrite turns it into a proper React component.
-
-import React from "react";
-import { Helmet } from "react-helmet";
-import { motion } from "framer-motion";
-import {
-  Phone,
-  Mail,
-  MapPin,
-  Instagram,
-  Facebook,
-  Leaf,
-  Sparkles,
-  Star,
-  CalendarDays,
-  Sun,
-  Ship,
-  Trees,
-} from "lucide-react";
-
-// ---------- UI helpers ----------
-const Section = ({ id, children }) => (
-  <section id={id} className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-    {children}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moonway Decorations | Events & Weddings in Red Sea</title>
+  <meta name="description" content="Moonway Decorations provides eco-friendly event & wedding decorations, sound & light, logistics, photography, and full event planning across El Gouna & the Red Sea.">
+  <meta property="og:title" content="Moonway Decorations | Events & Weddings in Red Sea">
+  <meta property="og:description" content="Eco-friendly event & wedding decorations, sound & light, logistics, and full event services in El Gouna & across the Red Sea.">
+  <meta property="og:image" content="preview.jpg">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="favicon.ico">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body class="font-sans text-gray-800 scroll-smooth">
+  <!-- Hero Section -->
+  <section class="relative bg-cover bg-center h-screen" style="background-image: url('your-hero-image.jpg');">
+    <div class="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center text-center text-white px-6">
+      <h1 class="text-4xl md:text-6xl font-bold mb-4">Moonway Decorations</h1>
+      <p class="text-lg md:text-2xl mb-6">Creating unforgettable events across El Gouna & the Red Sea</p>
+      <a href="#services" class="bg-white text-black px-6 py-3 rounded-full font-semibold hover:bg-gray-200 transition">Discover Our Services</a>
+    </div>
   </section>
-);
 
-const Pill = ({ children }) => (
-  <span className="inline-flex items-center rounded-full bg-white/70 backdrop-blur px-3 py-1 text-xs md:text-sm font-medium text-gray-800 shadow">
-    {children}
-  </span>
-);
+  <!-- About -->
+  <section id="about" class="py-16 px-6 max-w-6xl mx-auto text-center">
+    <h2 class="text-3xl font-bold mb-6">About Us</h2>
+    <p class="text-lg leading-relaxed text-gray-600">Moonway Decorations is your trusted partner for creative, eco-friendly, and professional event design. We specialize in weddings, parties, seasonal events, and art crafts for kids. With a strong presence in El Gouna and partnerships with 14+ hotels, we proudly serve the entire Red Sea region.</p>
+  </section>
 
-const NavLink = ({ href, label }) => (
-  <a href={href} className="text-sm md:text-[15px] font-medium text-gray-800 hover:text-black transition">
-    {label}
-  </a>
-);
-
-const Feature = ({ icon: Icon, title, text }) => (
-  <div className="p-6 bg-white rounded-2xl shadow-sm ring-1 ring-black/5">
-    <div className="w-12 h-12 rounded-2xl bg-black text-white flex items-center justify-center mb-4">
-      <Icon className="w-6 h-6" />
+  <!-- Services -->
+  <section id="services" class="py-16 bg-gray-50 px-6">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-12">Our Services</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-white p-6 rounded-2xl shadow">
+          <i class="bx bx-leaf text-5xl text-green-600 mb-4"></i>
+          <h3 class="text-xl font-semibold mb-2">Eco-Friendly Decorations</h3>
+          <p>Seasonal & festive designs in collaboration with 14+ hotels in El Gouna and across the Red Sea.</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow">
+          <i class="bx bx-party text-5xl text-pink-500 mb-4"></i>
+          <h3 class="text-xl font-semibold mb-2">Event Planning</h3>
+          <p>Complete event solutions — from sound & light to logistics, accommodation, and entertainment.</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow">
+          <i class="bx bx-heart text-5xl text-red-500 mb-4"></i>
+          <h3 class="text-xl font-semibold mb-2">Destination Weddings</h3>
+          <p>High-end but approachable planning for weddings in Egypt & abroad, including excursions, restaurants, and décor.</p>
+        </div>
+      </div>
     </div>
-    <h3 className="text-lg font-semibold mb-2">{title}</h3>
-    <p className="text-gray-600 text-sm leading-6">{text}</p>
-  </div>
-);
+  </section>
 
-const ServiceCard = ({ title, items }) => (
-  <div className="p-6 rounded-2xl bg-white shadow-sm ring-1 ring-black/5 h-full">
-    <h3 className="text-xl font-semibold mb-4">{title}</h3>
-    <ul className="space-y-2 text-gray-700 text-sm">
-      {items.map((i, idx) => (
-        <li key={idx} className="flex items-start gap-2">
-          <span className="mt-1">
-            <Star className="w-4 h-4" />
-          </span>
-          <span>{i}</span>
-        </li>
-      ))}
-    </ul>
-  </div>
-);
-
-const Testimonial = ({ quote, author, role }) => (
-  <div className="p-6 rounded-2xl bg-white shadow-sm ring-1 ring-black/5">
-    <p className="text-gray-900 text-base leading-7">“{quote}”</p>
-    <div className="mt-4 text-sm text-gray-600">{author} • {role}</div>
-  </div>
-);
-
-const CTAButtons = () => (
-  <div className="flex flex-wrap gap-3">
-    <a
-      data-test-id="cta-whatsapp"
-      href="https://wa.me/YOUR_WHATSAPP_NUMBER"
-      className="inline-flex items-center gap-2 rounded-2xl bg-black text-white px-5 py-3 text-sm md:text-base font-semibold shadow hover:shadow-lg transition"
-    >
-      <Phone className="w-4 h-4" /> WhatsApp Us
-    </a>
-    <a
-      data-test-id="cta-email"
-      href="mailto:info@moonwaydecorations.com"
-      className="inline-flex items-center gap-2 rounded-2xl bg-white text-gray-900 px-5 py-3 text-sm md:text-base font-semibold shadow hover:shadow-lg transition"
-    >
-      <Mail className="w-4 h-4" /> Email Us
-    </a>
-  </div>
-);
-
-// ---------- Main component ----------
-export default function MoonwayWebsite() {
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50 via-white to-white text-gray-900">
-      <Helmet>
-        <title>Moonway Decorations | Event & Wedding Planners in El Gouna & Red Sea</title>
-        <meta
-          name="description"
-          content="Moonway Decorations offers full event decoration & planning across El Gouna, Hurghada and the Red Sea: weddings, parties, corporate events, eco decor, sound & light."
-        />
-        <meta property="og:title" content="Moonway Decorations | Event & Wedding Planners" />
-        <meta
-          property="og:description"
-          content="Event decoration & planning across the Red Sea. Weddings, parties, corporate events, eco‑friendly décor & full event solutions."
-        />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://moonwaydecorations.com" />
-        <meta property="og:image" content="https://images.unsplash.com/photo-1491555103944-7c647fd857e6?q=80&w=1200&auto=format&fit=crop" />
-      </Helmet>
-
-      {/* Header / Nav */}
-      <header className="fixed top-0 inset-x-0 z-50 bg-white/80 backdrop-blur border-b border-black/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <a href="#home" className="text-lg md:text-xl font-black tracking-tight">Moonway Decorations</a>
-          <nav className="hidden md:flex items-center gap-6">
-            <NavLink href="#about" label="About" />
-            <NavLink href="#services" label="Services" />
-            <NavLink href="#destinations" label="Destinations" />
-            <NavLink href="#gallery" label="Gallery" />
-            <NavLink href="#testimonials" label="Testimonials" />
-            <NavLink href="#contact" label="Contact" />
-          </nav>
-          <a
-            href="https://wa.me/YOUR_WHATSAPP_NUMBER"
-            className="inline-flex items-center gap-2 rounded-xl bg-black text-white px-4 py-2 text-sm font-semibold shadow md:hover:shadow-lg transition"
-          >
-            <Phone className="w-4 h-4" /> Get Quote
-          </a>
-        </div>
-      </header>
-
-      {/* Hero */}
-      <Section id="home">
-        <div className="grid md:grid-cols-2 gap-10 items-center pt-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="space-y-6"
-          >
-            <div className="flex flex-wrap gap-2">
-              <Pill>El Gouna & Red Sea</Pill>
-              <Pill>Eco‑Friendly Décor</Pill>
-              <Pill>Destination Weddings</Pill>
-            </div>
-            <h1 className="text-3xl md:text-5xl font-black leading-tight">
-              Creative Events, Warm Details, Effortless Planning
-            </h1>
-            <p className="text-gray-700 text-base md:text-lg leading-7">
-              Trusted by 14+ hotels in El Gouna, we design weddings, parties, corporate events,
-              and seasonal installations across the Red Sea. Tailored to your style and budget.
-            </p>
-            <CTAButtons />
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
-              <div className="p-4 rounded-2xl bg-white shadow-sm ring-1 ring-black/5 flex items-center gap-2">
-                <Leaf className="w-4 h-4" /> Eco‑friendly
-              </div>
-              <div className="p-4 rounded-2xl bg-white shadow-sm ring-1 ring-black/5 flex items-center gap-2">
-                <Sparkles className="w-4 h-4" /> Custom styling
-              </div>
-              <div className="p-4 rounded-2xl bg-white shadow-sm ring-1 ring-black/5 flex items-center gap-2">
-                <CalendarDays className="w-4 h-4" /> Full planning
-              </div>
-              <div className="p-4 rounded-2xl bg-white shadow-sm ring-1 ring-black/5 flex items-center gap-2">
-                <Sun className="w-4 h-4" /> Red Sea wide
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="relative"
-          >
-            <div
-              className="aspect-[4/5] w-full rounded-3xl bg-cover bg-center shadow-xl"
-              style={{
-                backgroundImage:
-                  "url(https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1470&auto=format&fit=crop)",
-              }}
-            />
-            <div
-              className="absolute -bottom-6 -left-6 w-40 h-40 rounded-3xl bg-cover bg-center shadow-xl hidden md:block"
-              style={{
-                backgroundImage:
-                  "url(https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1349&auto=format&fit=crop)",
-              }}
-            />
-          </motion.div>
-        </div>
-      </Section>
-
-      {/* About */}
-      <Section id="about">
-        <div className="grid md:grid-cols-3 gap-6 items-start">
-          <div className="md:col-span-2 space-y-6">
-            <h2 className="text-2xl md:text-4xl font-black">About Moonway</h2>
-            <p className="text-gray-700 leading-7">
-              Moonway Decorations brings warmth, creativity, and artistry to celebrations across the Red Sea.
-              We design eco‑friendly Christmas installations for hotels, style beachfront weddings, and craft intimate parties
-              and corporate retreats. Every project is tailored to reflect your story, with options that fit different budgets.
-            </p>
-            <div className="grid sm:grid-cols-3 gap-4">
-              <Feature
-                icon={Leaf}
-                title="Sustainable"
-                text="Eco‑conscious materials and reusable concepts for seasonal and event décor."
-              />
-              <Feature
-                icon={Sparkles}
-                title="Creative"
-                text="Custom themes from boho and tropical to modern chic and oriental nights."
-              />
-              <Feature
-                icon={Star}
-                title="Trusted"
-                text="Preferred by 14+ El Gouna hotels and resorts across the Red Sea."
-              />
-            </div>
-          </div>
-          <div className="bg-white rounded-3xl p-6 shadow-sm ring-1 ring-black/5 space-y-4">
-            <h3 className="text-xl font-semibold">Quick Info</h3>
-            <div className="space-y-3 text-sm text-gray-700">
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4" /> El Gouna • Hurghada • Sahl Hasheesh • Soma Bay • Safaga • Marsa Alam
-              </div>
-              <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4" /> +20 XXX XXX XXXX
-              </div>
-              <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4" /> info@moonwaydecorations.com
-              </div>
-              <div className="flex items-center gap-2">
-                <Instagram className="w-4 h-4" /> @moonwaydecorations
-              </div>
-            </div>
-          </div>
-        </div>
-      </Section>
-
-      {/* Services */}
-      <Section id="services">
-        <h2 className="text-2xl md:text-4xl font-black mb-8">Services</h2>
-        <div className="grid md:grid-cols-3 gap-6">
-          <ServiceCard
-            title="Weddings & Destination Weddings"
-            items=[
-              "Beach, resort, villa venues",
-              "Full planning and coordination",
-              "Floral, arches, lighting, stages",
-              "Restaurant bookings and catering",
-              "Guest stays and transport",
-              "Excursions: yachts, desert, diving",
-              "Photography, videography, entertainment",
-            ]
-          />
-          <ServiceCard
-            title="Private & Corporate Events"
-            items=[
-              "Birthdays, engagements, anniversaries",
-              "Kids’ parties and themed styling",
-              "Conferences, retreats, gala dinners",
-              "Branding, signage, booth setups",
-              "Sound and light production",
-              "On‑site logistics and coordination",
-            ]
-          />
-          <ServiceCard
-            title="Seasonal Décor & Arts"
-            items=[
-              "Eco‑friendly Christmas installations",
-              "Hotel and community décor",
-              "New Year and festive setups",
-              "Handmade crafts and fabric printing",
-              "Custom décor pieces",
-            ]
-          />
-        </div>
-      </Section>
-
-      {/* Destinations */}
-      <Section id="destinations">
-        <div className="grid md:grid-cols-2 gap-10 items-center">
-          <div className="space-y-6">
-            <h2 className="text-2xl md:text-4xl font-black">Destinations We Serve</h2>
-            <p className="text-gray-700 leading-7">
-              From El Gouna to Marsa Alam, our team covers the entire Red Sea region with the same care and attention.
-              We partner with hotels, venues, and private estates to deliver seamless events.
-            </p>
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div className="p-4 rounded-2xl bg-white shadow-sm ring-1 ring-black/5 flex items-center gap-2">
-                <Ship className="w-4 h-4" /> El Gouna • Hurghada
-              </div>
-              <div className="p-4 rounded-2xl bg-white shadow-sm ring-1 ring-black/5 flex items-center gap-2">
-                <Sun className="w-4 h-4" /> Sahl Hasheesh • Makadi Bay
-              </div>
-              <div className="p-4 rounded-2xl bg-white shadow-sm ring-1 ring-black/5 flex items-center gap-2">
-                <Trees className="w-4 h-4" /> Soma Bay • Safaga
-              </div>
-              <div className="p-4 rounded-2xl bg-white shadow-sm ring-1 ring-black/5 flex items-center gap-2">
-                <MapPin className="w-4 h-4" /> Marsa Alam & beyond
-              </div>
-            </div>
-          </div>
-          <div
-            className="aspect-[16/10] w-full rounded-3xl bg-cover bg-center shadow-xl"
-            style={{
-              backgroundImage:
-                "url(https://images.unsplash.com/photo-1491555103944-7c647fd857e6?q=80&w=1470&auto=format&fit=crop)",
-            }}
-          />
-        </div>
-      </Section>
-
-      {/* Gallery */}
-      <Section id="gallery">
-        <h2 className="text-2xl md:text-4xl font-black mb-6">Gallery</h2>
-        <p className="text-gray-700 mb-8">
-          A glimpse of our celebrations. Replace these with your own images for maximum impact.
-        </p>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[
-            "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1470&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1470&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1470&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1521310192545-4ac7951413f0?q=80&w=1470&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1470&auto=format&fit=crop",
-            "https://images.unsplash.com/photo-1508898578281-774ac4893bd0?q=80&w=1470&auto=format&fit=crop",
-          ].map((src, i) => (
-            <div
-              key={i}
-              className="aspect-[4/3] rounded-2xl bg-cover bg-center shadow-sm ring-1 ring-black/5"
-              style={{ backgroundImage: `url(${src})` }}
-            />
-          ))}
-        </div>
-      </Section>
-
-      {/* Testimonials */}
-      <Section id="testimonials">
-        <h2 className="text-2xl md:text-4xl font-black mb-8">What Clients Say</h2>
-        <div className="grid md:grid-cols-3 gap-6">
-          <Testimonial
-            quote="Moonway made our beach wedding in El Gouna feel effortless and beautiful. Every detail was thoughtful."
-            author="Nour & Omar"
-            role="Wedding"
-          />
-          <Testimonial
-            quote="Our hotel’s Christmas décor was eco‑friendly and stunning. Guests kept taking photos."
-            author="Hotel Manager"
-            role="Seasonal Décor"
-          />
-          <Testimonial
-            quote="They handled logistics, décor, and entertainment for our retreat. Smooth and professional from start to finish."
-            author="Corporate Client"
-            role="Retreat"
-          />
-        </div>
-      </Section>
-
-      {/* Contact */}
-      <Section id="contact">
-        <div className="grid md:grid-cols-2 gap-10 items-start">
-          <div className="space-y-6">
-            <h2 className="text-2xl md:text-4xl font-black">Let’s Start Planning</h2>
-            <p className="text-gray-700 leading-7">
-              Tell us about your celebration and we’ll propose ideas, budgets, and timelines that fit. Quick replies on WhatsApp.
-            </p>
-            <div className="space-y-4 text-sm text-gray-700">
-              <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4" /> +20 XXX XXX XXXX
-              </div>
-              <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4" /> info@moonwaydecorations.com
-              </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4" /> El Gouna, Red Sea, Egypt
-              </div>
-              <div className="flex items-center gap-3">
-                <a
-                  href="https://instagram.com/moonwaydecorations"
-                  className="inline-flex items-center gap-2 rounded-xl bg-white px-3 py-2 ring-1 ring-black/5 shadow hover:shadow-md transition"
-                >
-                  <Instagram className="w-4 h-4" /> Instagram
-                </a>
-                <a
-                  href="https://facebook.com/moonwaydecorations"
-                  className="inline-flex items-center gap-2 rounded-xl bg-white px-3 py-2 ring-1 ring-black/5 shadow hover:shadow-md transition"
-                >
-                  <Facebook className="w-4 h-4" /> Facebook
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <form className="bg-white rounded-3xl p-6 shadow-sm ring-1 ring-black/5 space-y-4">
-            <div className="grid sm:grid-cols-2 gap-4">
-              <input
-                type="text"
-                placeholder="Full name"
-                className="w-full rounded-xl border border-gray-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black/20"
-              />
-              <input
-                type="email"
-                placeholder="Email"
-                className="w-full rounded-xl border border-gray-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black/20"
-              />
-            </div>
-            <div className="grid sm:grid-cols-2 gap-4">
-              <input
-                type="tel"
-                placeholder="Phone/WhatsApp"
-                className="w-full rounded-xl border border-gray-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black/20"
-              />
-              <input
-                type="text"
-                placeholder="Event location"
-                className="w-full rounded-xl border border-gray-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black/20"
-              />
-            </div>
-            <select className="w-full rounded-xl border border-gray-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black/20">
-              <option>Weddings & Destination Weddings</option>
-              <option>Private Party</option>
-              <option>Corporate Event</option>
-              <option>Seasonal & Hotel Décor</option>
-              <option>Arts & Crafts Services</option>
-            </select>
-            <textarea
-              rows={5}
-              placeholder="Tell us about your event: date, guests, style, budget"
-              className="w-full rounded-xl border border-gray-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black/20"
-            />
-            <button
-              type="submit"
-              className="w-full rounded-xl bg-black text-white px-4 py-3 font-semibold shadow hover:shadow-lg transition"
-            >
-              Request a Proposal
-            </button>
-            <p className="text-xs text-gray-500 text-center">
-              By submitting, you agree to be contacted about your event.
-            </p>
-          </form>
-        </div>
-      </Section>
-
-      {/* Footer */}
-      <footer className="border-t border-black/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="text-sm text-gray-600">© {new Date().getFullYear()} Moonway Decorations. All rights reserved.</div>
-          <div className="flex items-center gap-6 text-sm">
-            <a href="#about" className="hover:underline">About</a>
-            <a href="#services" className="hover:underline">Services</a>
-            <a href="#destinations" className="hover:underline">Destinations</a>
-            <a href="#contact" className="hover:underline">Contact</a>
-          </div>
-        </div>
-      </footer>
+  <!-- Gallery -->
+  <section id="gallery" class="py-16 px-6">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-12">Gallery</h2>
+      <div class="grid md:grid-cols-3 gap-6">
+        <img src="gallery1.jpg" alt="Decoration 1" class="rounded-xl shadow">
+        <img src="gallery2.jpg" alt="Decoration 2" class="rounded-xl shadow">
+        <img src="gallery3.jpg" alt="Decoration 3" class="rounded-xl shadow">
+      </div>
     </div>
-  );
-}
+  </section>
 
-// ---------- Minimal test hooks ----------
-// These are non‑executing helpers you (or CI) can call after mounting the component.
-// They don't change runtime behavior and satisfy the request for basic test cases.
-export function runSmokeTests() {
-  const ids = ["home", "about", "services", "destinations", "gallery", "testimonials", "contact"];
-  const present = ids.map((id) => Boolean(document.getElementById(id)));
-  return {
-    allSectionsRendered: present.every(Boolean),
-    sections: ids.map((id, i) => ({ id, found: present[i] })),
-    ctaLinks:
-      Array.from(document.querySelectorAll('[data-test-id^="cta-"]')).map((a) => ({
-        text: a.textContent?.trim() || "",
-        href: a.getAttribute("href") || "",
-      })) || [],
-  };
-}
+  <!-- Contact -->
+  <section id="contact" class="py-16 bg-gray-900 text-white px-6">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl font-bold mb-6">Get in Touch</h2>
+      <p class="mb-6 text-gray-300">Let us help you create your dream event. Contact us today!</p>
+      <div class="flex flex-col md:flex-row justify-center gap-6">
+        <a href="mailto:info@moonwaydecorations.com" class="bg-white text-black px-6 py-3 rounded-full font-semibold hover:bg-gray-200 transition">Email Us</a>
+        <a href="https://wa.me/YOUR_WHATSAPP_NUMBER" class="bg-green-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-600 transition">WhatsApp</a>
+      </div>
+      <div class="flex justify-center gap-6 mt-8 text-2xl">
+        <a href="https://instagram.com/YOUR_INSTAGRAM" class="hover:text-pink-400"><i class="bx bxl-instagram"></i></a>
+        <a href="https://facebook.com/YOUR_FACEBOOK" class="hover:text-blue-400"><i class="bx bxl-facebook"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-6 text-center text-gray-500 text-sm bg-gray-100">
+    © 2025 Moonway Decorations · All Rights Reserved
+  </footer>
+</body>
+</html>
