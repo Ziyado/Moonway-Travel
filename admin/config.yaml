@@ -1,55 +1,27 @@
 backend:
   name: github
-  repo: Ziyado/Moonway-Travel 
+  repo: Ziyado/Moonway-Travel
   branch: main
-  base_url: https://moonwaytravel.com  
+  base_url: https://moonwaytravel.com   # 👈 your custom domain
 
-media_folder: "/assets"
-public_folder: "/img"
-
-site_url: https://moonwaytravel.com
+media_folder: "assets/uploads"
+public_folder: "/assets/uploads"  # how CMS references them in HTML
 
 collections:
   - name: "pages"
     label: "Pages"
     files:
-      - file: "index.html"
-        label: "Homepage"
-        name: "homepage"
+      - file: "moonway-events/index.html"
+        label: "Moonway Events"
+        name: "moonway_events"
         fields:
-          - { label: "Hero Title", name: "hero_title", widget: "string" }
-          - { label: "Hero Subtitle", name: "hero_subtitle", widget: "string" }
-          - { label: "Intro Text", name: "intro", widget: "markdown" }
-          - { label: "Main Content", name: "content", widget: "markdown" }
-
-  - name: "events"
-    label: "Events"
-    folder: "content/events"
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Date", name: "date", widget: "datetime" }
-      - { label: "Description", name: "body", widget: "markdown" }
-      - { label: "Image", name: "image", widget: "image" }
-
-  - name: "weddings"
-    label: "Weddings"
-    folder: "content/weddings"
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - { label: "Couple Name", name: "title", widget: "string" }
-      - { label: "Date", name: "date", widget: "datetime" }
-      - { label: "Details", name: "body", widget: "markdown" }
-      - { label: "Image", name: "image", widget: "image" }
-
-  - name: "crafts"
-    label: "Crafts & Kids"
-    folder: "content/crafts"
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Description", name: "body", widget: "markdown" }
-      - { label: "Image", name: "image", widget: "image" }
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Description", name: "description", widget: "text" }
+          - { label: "Body", name: "body", widget: "markdown" }
+      - file: "moonway-travel/index.html"
+        label: "Moonway Travel"
+        name: "moonway_travel"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Description", name: "description", widget: "text" }
+          - { label: "Body", name: "body", widget: "markdown" }
