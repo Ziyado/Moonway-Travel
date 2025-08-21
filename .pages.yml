@@ -1,27 +1,31 @@
-backend:
-  name: github
-  repo: Ziyado/Moonway-Travel
-  branch: main
-  base_url: https://moonwaytravel.com   # 👈 your custom domain
+media: assets
 
-media_folder: "assets"
-public_folder: "/assets"  # how CMS references them in HTML
+content:
+  - name: site
+    label: Site Settings
+    path: data/site.json
+    type: file
+    fields:
+      - name: title
+        label: Site Title
+        type: string
+      - name: description
+        label: Description
+        type: text
+      - name: logo
+        label: Logo
+        type: image
 
-collections:
-  - name: "pages"
-    label: "Pages"
-    files:
-      - file: "moonway-events/index.html"
-        label: "Moonway Events"
-        name: "moonway_events"
-        fields:
-          - { label: "Title", name: "title", widget: "string" }
-          - { label: "Description", name: "description", widget: "text" }
-          - { label: "Body", name: "body", widget: "markdown" }
-      - file: "moonway-travel/index.html"
-        label: "Moonway Travel"
-        name: "moonway_travel"
-        fields:
-          - { label: "Title", name: "title", widget: "string" }
-          - { label: "Description", name: "description", widget: "text" }
-          - { label: "Body", name: "body", widget: "markdown" }
+  - name: pages
+    label: Pages
+    type: collection
+    path: data/pages
+    view:
+      fields: [ title ]
+    fields:
+      - name: title
+        label: Title
+        type: string
+      - name: body
+        label: Body
+        type: rich-text
