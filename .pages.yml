@@ -4,8 +4,8 @@ backend:
   branch: main
   base_url: https://moonwaytravel.com   # 👈 your custom domain
 
-media_folder: "assets/uploads"
-public_folder: "/assets/uploads"  # how CMS references them in HTML
+media_folder: "assets"
+public_folder: "/assets"  # how CMS references them in HTML
 
 collections:
   - name: "pages"
