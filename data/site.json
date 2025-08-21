@@ -1,22 +1,6 @@
 {
-  "hero_title": "Moonway Decorations",
-  "hero_text": "Bringing your events to life across the Red Sea",
-  "hero_image": "your-hero-image.jpg",
-  "about": "At Moonway Decorations, we specialize in creating unforgettable experiences...",
-  "services": [
-    { "icon": "bxs-tree", "title": "Eco-Friendly Decorations", "text": "Christmas setups, sustainable wedding and event designs across hotels and venues." },
-    { "icon": "bxs-microphone", "title": "Sound & Light", "text": "Full technical handling of sound, light, and event staging." },
-    { "icon": "bxs-camera", "title": "Photography & Videography", "text": "Professional media coverage to capture every moment." }
-  ],
-  "gallery": [
-    { "image": "gallery1.jpg", "alt": "Moonway Event Decoration" },
-    { "image": "gallery2.jpg", "alt": "Moonway Wedding Setup" },
-    { "image": "gallery3.jpg", "alt": "Moonway Kids Crafts" }
-  ],
-  "contact": {
-    "email": "info@moonwaytravel.com",
-    "whatsapp": "+201001521151",
-    "instagram": "https://instagram.com/moonwayevents",
-    "facebook": "https://facebook.com/moonwaydecoration"
+  "portal_links": {
+    "travel_logo": "/assets/moonway-travel-logo.png",
+    "events_logo": "/assets/moonway-events-logo.png"
   }
 }
