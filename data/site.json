@@ -1,6 +1,7 @@
 {
   "portal_links": {
     "travel_logo": "/assets/moonway-travel-logo.png",
-    "events_logo": "/assets/moonway-events-logo.png"
+    "events_logo": "/assets/moonway-events-logo.png",
+    "events_link": "http://moonwaytravel.com/moonway-events/index.html"
   }
 }
