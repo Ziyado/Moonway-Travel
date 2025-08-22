@@ -1,4 +1,4 @@
-media: /assets
+media: assets
 
 content:
   - name: site
@@ -13,12 +13,16 @@ content:
           - name: travel_logo
             label: Travel Logo
             type: image
+            media_folder: "assets/logos"
+            public_folder: "/assets/logos"
           - name: travel_link
             label: Travel Link
             type: string
           - name: events_logo
             label: Events Logo
             type: image
+            media_folder: "assets/logos"
+            public_folder: "/assets/logos"
           - name: events_link
             label: Events Link
             type: string
@@ -37,28 +41,52 @@ content:
       - name: hero_image
         label: Hero Background
         type: image
+        media_folder: "assets/hero"
+        public_folder: "/assets/hero"
       - name: about
         label: About Us
         type: text
       - name: services
         label: Services
-        widget: list
+        type: list
         fields:
-          - { name: icon, label: Icon (Boxicons class), widget: string }
-          - { name: color, label: Color Class, widget: string }
-          - { name: title, label: Title, widget: string }
-          - { name: text, label: Description, widget: text }
+          - name: icon
+            label: Icon (Boxicons class)
+            type: string
+          - name: color
+            label: Color Class
+            type: string
+          - name: title
+            label: Title
+            type: string
+          - name: text
+            label: Description
+            type: text
       - name: gallery
         label: Gallery
-        widget: list
+        type: list
         fields:
-          - { name: image, label: Image, widget: image }
-          - { name: alt, label: Alt text, widget: string }
+          - name: image
+            label: Image
+            type: image
+            media_folder: "assets/gallery"
+            public_folder: "/assets/gallery"
+          - name: alt
+            label: Alt text
+            type: string
       - name: contact
         label: Contact Info
         type: object
         fields:
-          - { name: email, label: Email, type: string }
-          - { name: whatsapp, label: WhatsApp, type: string }
-          - { name: instagram, label: Instagram URL, type: string }
-          - { name: facebook, label: Facebook URL, type: string }
+          - name: email
+            label: Email
+            type: string
+          - name: whatsapp
+            label: WhatsApp
+            type: string
+          - name: instagram
+            label: Instagram URL
+            type: string
+          - name: facebook
+            label: Facebook URL
+            type: string
