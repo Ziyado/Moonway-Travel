@@ -3,49 +3,6 @@
   "hero_text": "Bringing your events to life across the Red Sea",
   "hero_image": "your-hero-image.jpg",
   "about": "At Moonway Decorations, we specialize in creating unforgettable experiences...",
-"services": [
-  {
-    "icon": "bx bxs-tree",
-    "color": "text-green-500",
-    "title": "Eco-Friendly Decorations",
-    "text": "Christmas setups, sustainable wedding and event designs across hotels and venues."
-  },
-  {
-    "icon": "bx bxs-microphone",
-    "color": "text-pink-600",
-    "title": "Sound & Light",
-    "text": "Full technical handling of sound, light, and event staging."
-  },
-  {
-    "icon": "bx bxs-camera",
-    "color": "text-blue-600",
-    "title": "Photography & Videography",
-    "text": "Professional media coverage to capture every moment of your event."
-  },
-  {
-    "icon": "bx bxs-bus",
-    "color": "text-yellow-600",
-    "title": "Logistics & Accommodation",
-    "text": "We arrange smooth logistics, hotel bookings, and transport for guests."
-  },
-  {
-    "icon": "bx bxs-heart",
-    "color": "text-red-500",
-    "title": "Destination Weddings",
-    "text": "Full planning including excursions, restaurants, and high-end services."
-  },
-  {
-    "icon": "bx bxs-palette",
-    "color": "text-purple-500",
-    "title": "Kids’ Art & Crafts",
-    "text": "Creative workshops for children, from painting to fabric printing and more."
-  }
-],
-  "gallery": [
-    { "image": "gallery1.jpg", "alt": "Moonway Event Decoration" },
-    { "image": "gallery2.jpg", "alt": "Moonway Wedding Setup" },
-    { "image": "gallery3.jpg", "alt": "Moonway Kids Crafts" }
-  ],
   "contact": {
     "email": "info@moonwaytravel.com",
     "whatsapp": "+201001521151",
@@ -53,4 +10,3 @@
     "facebook": "https://facebook.com/moonwaydecoration"
   }
 }
-
