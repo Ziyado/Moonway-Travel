@@ -10,83 +10,46 @@ content:
         label: Portal Links
         type: object
         fields:
-          - name: travel_logo
-            label: Travel Logo
-            type: image
-            media_folder: "assets/logos"
-            public_folder: "/assets/logos"
-          - name: travel_link
-            label: Travel Link
-            type: string
-          - name: events_logo
-            label: Events Logo
-            type: image
-            media_folder: "assets/logos"
-            public_folder: "/assets/logos"
-          - name: events_link
-            label: Events Link
-            type: string
+          - { name: travel_logo, label: Travel Logo, type: image, media_folder: "assets/logos", public_folder: "/assets/logos" }
+          - { name: travel_link, label: Travel Link, type: string }
+          - { name: events_logo, label: Events Logo, type: image, media_folder: "assets/logos", public_folder: "/assets/logos" }
+          - { name: events_link, label: Events Link, type: string }
 
   - name: events
     label: Moonway Events
     path: data/events.json
     type: file
     fields:
-      - name: hero_title
-        label: Hero Title
-        type: string
-      - name: hero_text
-        label: Hero Text
-        type: text
-      - name: hero_image
-        label: Hero Background
-        type: image
-        media_folder: "assets/hero"
-        public_folder: "/assets/hero"
-      - name: about
-        label: About Us
-        type: text
+      - { name: hero_title, label: Hero Title, type: string }
+      - { name: hero_text, label: Hero Text, type: text }
+      - { name: hero_image, label: Hero Background, type: image, media_folder: "assets/hero", public_folder: "/assets/hero" }
+      - { name: about, label: About Us, type: text }
+
       - name: services
         label: Services
-        type: list
+        type: list   # ✅ must be list, not object
+        label_singular: Service
+        summary: "{{fields.title}}"
         fields:
-          - name: icon
-            label: Icon (Boxicons class)
-            type: string
-          - name: color
-            label: Color Class
-            type: string
-          - name: title
-            label: Title
-            type: string
-          - name: text
-            label: Description
-            type: text
+          - { name: icon, label: Icon (Boxicons class), type: string }
+          - { name: color, label: Color Class, type: string }
+          - { name: title, label: Title, type: string }
+          - { name: text, label: Description, type: text }
+
       - name: gallery
         label: Gallery
-        type: list
+        type: list   # ✅ must be list for multiple uploads
+        label_singular: Image
+        summary: "{{fields.alt}}"
         fields:
-          - name: image
-            label: Image
-            type: image
-            media_folder: "assets/gallery"
-            public_folder: "/assets/gallery"
-          - name: alt
-            label: Alt text
-            type: string
+          - { name: image, label: Image, type: image, media_folder: "assets/gallery", public_folder: "/assets/gallery" }
+          - { name: alt, label: Alt Text, type: string }
+
       - name: contact
         label: Contact Info
         type: object
         fields:
-          - name: email
-            label: Email
-            type: string
-          - name: whatsapp
-            label: WhatsApp
-            type: string
-          - name: instagram
-            label: Instagram URL
-            type: string
-          - name: facebook
-            label: Facebook URL
-            type: string
+          - { name: email, label: Email, type: string }
+          - { name: whatsapp, label: WhatsApp, type: string }
+          - { name: instagram, label: Instagram URL, type: string }
+          - { name: facebook, label: Facebook URL, type: string }
