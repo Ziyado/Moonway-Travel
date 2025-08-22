@@ -50,10 +50,10 @@ content:
           - { name: text, label: Description, widget: text }
       - name: gallery
         label: Gallery
-        type: list
+        widget: list
         fields:
-          - { name: image, label: Image, type: image }
-          - { name: alt, label: Alt text, type: string }
+          - { name: url, label: Image, widget: image }
+          - { name: alt, label: Alt Text, widget: string }
       - name: contact
         label: Contact Info
         type: object
