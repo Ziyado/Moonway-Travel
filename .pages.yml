@@ -1,4 +1,4 @@
-media: assets
+media: /assets
 
 content:
   - name: site
@@ -52,8 +52,8 @@ content:
         label: Gallery
         widget: list
         fields:
-          - { name: url, label: Image, widget: image }
-          - { name: alt, label: Alt Text, widget: string }
+          - { name: image, label: Image, widget: image }
+          - { name: alt, label: Alt text, widget: string }
       - name: contact
         label: Contact Info
         type: object
