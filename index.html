@@ -17,15 +17,5 @@
       <img id="events-logo" src="assets/moonway-events-logo.png" alt="Moonway Events" class="mx-auto w-64 h-auto mb-4">
     </a>
   </div>
-  <script>
-  async function loadPortal() {
-  const site = await fetch("data/site.json").then(r => r.json());
-  document.getElementById("travel-logo").src = site.portal_links.travel_logo;
-  document.getElementById("travel-link").href = site.portal_links.travel_link;
-  document.getElementById("events-logo").src = site.portal_links.events_logo;
-  document.getElementById("events-link").href = site.portal_links.events_link;
-}
-loadPortal();
-</script>
 </body>
 </html>
