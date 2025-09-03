@@ -62,31 +62,6 @@
     </div>
   </section>
 
-  <!-- Gallery -->
-<section id="gallery" class="py-16 px-6">
-  <div class="max-w-6xl mx-auto">
-    <h2 class="text-3xl font-bold text-center mb-12">Gallery</h2>
-    <div id="gallery-grid" class="grid md:grid-cols-3 gap-6"></div>
-  </div>
-</section>
-
-<script>
-const images = [
-  "../assets/gallery/image1.jpg",
-  "../assets/gallery/image2.jpg",
-  "../assets/gallery/image3.jpg",
-  "../assets/gallery/image4.jpg"
-];
-
-const gallery = document.getElementById("gallery-grid");
-images.forEach(src => {
-  const img = document.createElement("img");
-  img.src = src;
-  img.alt = "Gallery Image";
-  img.className = "rounded-xl shadow";
-  gallery.appendChild(img);
-});
-</script>
 
 
   <!-- Contact -->
@@ -111,6 +86,7 @@ images.forEach(src => {
   </footer>
 </body>
 </html>
+
 
 
 
