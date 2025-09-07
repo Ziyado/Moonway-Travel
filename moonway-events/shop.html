@@ -30,44 +30,28 @@
   .info a{display:inline-block;padding:8px 12px;border-radius:999px;background:var(--accent);color:#231a16;text-decoration:none;font-weight:600}
   .legend{position:absolute;left:18px;bottom:18px;color:#f3efe9;background:rgba(0,0,0,.16);padding:8px 12px;border-radius:999px;font-size:.95rem}
   .title {position:absolute;left:18px;top:18px;color:#f3efe9;font-weight:700;letter-spacing:.02em}
-  .back-home {
-    position:absolute;
-    left:18px;
-    top:60px;
-    padding:8px 16px;
-    background:var(--accent);
-    color:#231a16;
-    text-decoration:none;
-    font-weight:600;
-    border-radius:999px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.3);
-    transition: transform 0.2s;
-    z-index:10;
-  }
-  .back-home:hover { transform: scale(1.05); }
   @media (max-width:640px){
     .info{right:12px;left:12px;width:auto}
     .title{left:12px}
-    .back-home{left:12px;top:54px;}
   }
 </style>
 </head>
 <body>
-<div id="container">
-  <div class="title">Moonway — Explore Egypt</div>
-  <a class="back-home" href="index.html">← Back to Home</a>
-  <div id="canvas-wrap"></div>
+  <div id="container">
+    <div class="title">Moonway — Explore Egypt</div>
+    <div id="canvas-wrap"></div>
 
-  <div class="info" id="info">
-    <h3 id="info-title">Region</h3>
-    <p id="info-text">Short description...</p>
-    <a id="info-link" href="#" target="_blank">Open image</a>
+    <div class="info" id="info">
+      <h3 id="info-title">Region</h3>
+      <p id="info-text">Short description...</p>
+      <a id="info-link" href="#" target="_blank">Open image</a>
+    </div>
+
+    <div class="legend">Drag to orbit • Click markers</div>
   </div>
 
-  <div class="legend">Drag to orbit • Click markers</div>
-</div>
-
 <script type="module">
+// ✅ CDN imports for GitHub Pages
 import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
 import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js";
 
@@ -98,18 +82,12 @@ const dir = new THREE.DirectionalLight(0xffffff, 0.9);
 dir.position.set(5, 10, 5);
 scene.add(dir);
 
-// Map plane
+// --- Map plane ---
 const loader = new THREE.TextureLoader();
 const PLANE_W = 12;
 const PLANE_H = 14;
 
-const mapTex = loader.load(
-  "assets/egypt-map.png",
-  () => console.log("✅ Map loaded"),
-  undefined,
-  (err) => console.error("❌ Failed to load map", err)
-);
-
+const mapTex = loader.load("./assets/egypt-map.png");
 const planeGeo = new THREE.PlaneGeometry(PLANE_W, PLANE_H, 1, 1);
 const planeMat = new THREE.MeshStandardMaterial({ map: mapTex, side: THREE.DoubleSide });
 const mapPlane = new THREE.Mesh(planeGeo, planeMat);
@@ -124,14 +102,14 @@ rim.rotation.x = -Math.PI/2;
 rim.position.y = -0.01;
 scene.add(rim);
 
-// Regions
+// --- Regions ---
 const regions = [
-  { id:'siwa', name:'Siwa', u:0.07, v:0.18, url:'assets/places/siwa.jpg', desc:'Siwa Oasis — palms, salt lakes, and Amazigh weaving.' },
-  { id:'oasis', name:'Oasis', u:0.26, v:0.33, url:'assets/places/oasis.jpg', desc:'Egyptian oases: pottery & palm weaving rooted in desert life.' },
-  { id:'halayeb', name:'Halayeb', u:0.82, v:0.42, url:'assets/places/halayeb.jpg', desc:'Halayeb — Red Sea mountains, colorful local patterns and crafts.' },
-  { id:'upper', name:'Upper Egypt', u:0.5, v:0.62, url:'assets/places/upper-egypt.jpg', desc:'Upper Egypt — Nile valley traditions, carvings & textiles.' },
-  { id:'redsea', name:'Red Sea', u:0.78, v:0.66, url:'assets/places/red-sea.jpg', desc:'Red Sea coast — maritime crafts, shells and rope work.' },
-  { id:'alex', name:'Alexandria', u:0.18, v:0.75, url:'assets/places/alexandria.jpg', desc:'Alexandria — Mediterranean influence in coastal crafts.' },
+  { id:'siwa', name:'Siwa', u:0.07, v:0.18, url:'./assets/places/siwa.jpg', desc:'Siwa Oasis — palms, salt lakes, and Amazigh weaving.' },
+  { id:'oasis', name:'Oasis', u:0.26, v:0.33, url:'./assets/places/oasis.jpg', desc:'Egyptian oases: pottery & palm weaving rooted in desert life.' },
+  { id:'halayeb', name:'Halayeb', u:0.82, v:0.42, url:'./assets/places/halayeb.jpg', desc:'Halayeb — Red Sea mountains, colorful local patterns and crafts.' },
+  { id:'upper', name:'Upper Egypt', u:0.5, v:0.62, url:'./assets/places/upper-egypt.jpg', desc:'Upper Egypt — Nile valley traditions, carvings & textiles.' },
+  { id:'redsea', name:'Red Sea', u:0.78, v:0.66, url:'./assets/places/red-sea.jpg', desc:'Red Sea coast — maritime crafts, shells and rope work.' },
+  { id:'alex', name:'Alexandria', u:0.18, v:0.75, url:'./assets/places/alexandria.jpg', desc:'Alexandria — Mediterranean influence in coastal crafts.' },
 ];
 
 const markers = [];
@@ -174,7 +152,7 @@ regions.forEach(r=>{
   markers.push(cyl);
 });
 
-// Interaction
+// --- Interaction ---
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 let hovered = null;
