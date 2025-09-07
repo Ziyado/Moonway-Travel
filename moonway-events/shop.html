@@ -81,8 +81,8 @@
   dir.position.set(5, 10, 5);
   scene.add(dir);
 
-  // --- Map plane ---
-  const mapImage = './assets/egypt-map.png';
+  // ✅ Fixed path
+  const mapImage = 'assets/egypt-map.png';
   const loader = new THREE.TextureLoader();
   const PLANE_W = 12;
   const PLANE_H = 14;
@@ -102,7 +102,6 @@
   rim.position.y = -0.01;
   scene.add(rim);
 
-  // --- Regions ---
   const regions = [
     { id:'siwa', name:'Siwa', u:0.07, v:0.18, url:'assets/places/siwa.jpg', desc:'Siwa Oasis — palms, salt lakes, and Amazigh weaving.' },
     { id:'oasis', name:'Oasis', u:0.26, v:0.33, url:'assets/places/oasis.jpg', desc:'Egyptian oases: pottery & palm weaving rooted in desert life.' },
@@ -152,7 +151,6 @@
     markers.push(cyl);
   });
 
-  // --- Interaction ---
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
   let hovered = null;
@@ -185,7 +183,6 @@
     }
   });
 
-  // --- Animate ---
   const clock = new THREE.Clock();
   function animate(){
     requestAnimationFrame(animate);
