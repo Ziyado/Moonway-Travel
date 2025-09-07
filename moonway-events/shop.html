@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Moonway — 3D Interactive Map</title>
+<style>
+  :root{--bg:#0f0b08;--panel:#f7efe6;--accent:#d6b98b}
+  html,body{height:100%;margin:0;background:var(--bg);font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial}
+  #container{width:100%;height:100vh;position:relative;overflow:hidden}
+  canvas{display:block}
+  .info {
+    position: absolute;
+    right: 24px;
+    top: 24px;
+    width: 320px;
+    max-width: calc(100% - 48px);
+    background: rgba(247,239,230,0.98);
+    color:#231a16;
+    border-radius:12px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+    padding: 16px;
+    transform-origin: top right;
+    transition: transform .32s cubic-bezier(.2,.9,.3,1), opacity .32s;
+    opacity:0; pointer-events:none;
+  }
+  .info.show{opacity:1; pointer-events:auto; transform: translateY(0);}
+  .info h3{margin:0 0 8px;font-size:1.15rem}
+  .info p{margin:0 0 12px;color:#4f3f36;line-height:1.35}
+  .info a{display:inline-block;padding:8px 12px;border-radius:999px;background:var(--accent);color:#231a16;text-decoration:none;font-weight:600}
+  .legend{position:absolute;left:18px;bottom:18px;color:#f3efe9;background:rgba(0,0,0,.16);padding:8px 12px;border-radius:999px;font-size:.95rem}
+  .title {position:absolute;left:18px;top:18px;color:#f3efe9;font-weight:700;letter-spacing:.02em}
+  @media (max-width:640px){
+    .info{right:12px;left:12px;width:auto}
+    .title{left:12px}
+  }
+</style>
+</head>
+<body>
+  <div id="container">
+    <div class="title">Moonway — Explore Egypt</div>
+    <div id="canvas-wrap"></div>
+
+    <div class="info" id="info">
+      <h3 id="info-title">Region</h3>
+      <p id="info-text">Short description...</p>
+      <a id="info-link" href="#" target="_blank">Open image</a>
+    </div>
+
+    <div class="legend">Drag to orbit • Click markers</div>
+  </div>
+
+  <script type="module">
+  import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+  import { OrbitControls } from 'https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js';
+
+  const container = document.getElementById('canvas-wrap');
+  const canvasParent = document.getElementById('container');
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0f0b08);
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  canvasParent.insertBefore(renderer.domElement, canvasParent.firstChild);
+
+  const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 200);
+  camera.position.set(0, 8, 12);
+
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enablePan = false;
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.08;
+  controls.minDistance = 6;
+  controls.maxDistance = 30;
+  controls.maxPolarAngle = Math.PI * 0.45;
+
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x443322, 0.6));
+  const dir = new THREE.DirectionalLight(0xffffff, 0.9);
+  dir.position.set(5, 10, 5);
+  scene.add(dir);
+
+  // --- Map plane ---
+  const mapImage = './assets/egypt-map.png';
+  const loader = new THREE.TextureLoader();
+  const PLANE_W = 12;
+  const PLANE_H = 14;
+
+  const mapTex = loader.load(mapImage, (tex) => { tex.colorSpace = THREE.SRGBColorSpace; });
+  const planeGeo = new THREE.PlaneGeometry(PLANE_W, PLANE_H, 1, 1);
+  const planeMat = new THREE.MeshStandardMaterial({ map: mapTex, side: THREE.DoubleSide });
+  const mapPlane = new THREE.Mesh(planeGeo, planeMat);
+  mapPlane.rotation.x = -Math.PI / 2;
+  scene.add(mapPlane);
+
+  const rim = new THREE.Mesh(
+    new THREE.RingGeometry(PLANE_W*0.5 + 0.05, PLANE_W*0.5 + 0.35, 64),
+    new THREE.MeshBasicMaterial({ color: 0x241812, transparent: true, opacity: 0.35 })
+  );
+  rim.rotation.x = -Math.PI/2;
+  rim.position.y = -0.01;
+  scene.add(rim);
+
+  // --- Regions ---
+  const regions = [
+    { id:'siwa', name:'Siwa', u:0.07, v:0.18, url:'assets/places/siwa.jpg', desc:'Siwa Oasis — palms, salt lakes, and Amazigh weaving.' },
+    { id:'oasis', name:'Oasis', u:0.26, v:0.33, url:'assets/places/oasis.jpg', desc:'Egyptian oases: pottery & palm weaving rooted in desert life.' },
+    { id:'halayeb', name:'Halayeb', u:0.82, v:0.42, url:'assets/places/halayeb.jpg', desc:'Halayeb — Red Sea mountains, colorful local patterns and crafts.' },
+    { id:'upper', name:'Upper Egypt', u:0.5, v:0.62, url:'assets/places/upper-egypt.jpg', desc:'Upper Egypt — Nile valley traditions, carvings & textiles.' },
+    { id:'redsea', name:'Red Sea', u:0.78, v:0.66, url:'assets/places/red-sea.jpg', desc:'Red Sea coast — maritime crafts, shells and rope work.' },
+    { id:'alex', name:'Alexandria', u:0.18, v:0.75, url:'assets/places/alexandria.jpg', desc:'Alexandria — Mediterranean influence in coastal crafts.' },
+  ];
+
+  const markers = [];
+  const MARKER_HEIGHT = 0.35;
+
+  regions.forEach(r=>{
+    const x = (r.u - 0.5) * PLANE_W;
+    const z = (0.5 - r.v) * PLANE_H;
+
+    const cyl = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.06, 0.06, MARKER_HEIGHT, 12),
+      new THREE.MeshStandardMaterial({ color: 0x432f22, roughness: 0.6, metalness: 0.25 })
+    );
+    cyl.position.set(x, MARKER_HEIGHT/2, z);
+
+    const glow = new THREE.Mesh(
+      new THREE.SphereGeometry(0.14, 12, 10),
+      new THREE.MeshBasicMaterial({ color: 0xd6b98b, transparent: true, opacity: 0.95 })
+    );
+    glow.position.set(0, MARKER_HEIGHT/2 + 0.2, 0);
+    cyl.add(glow);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 512; canvas.height = 128;
+    const ctx = canvas.getContext('2d');
+    ctx.font = '700 46px Georgia';
+    ctx.fillStyle = '#f3efe9';
+    ctx.textAlign = 'center'; ctx.textBaseline='middle';
+    ctx.fillText(r.name, 256, 64);
+    const labelTex = new THREE.CanvasTexture(canvas);
+    labelTex.colorSpace = THREE.SRGBColorSpace;
+    const labelMat = new THREE.SpriteMaterial({ map: labelTex, transparent: true });
+    const sprite = new THREE.Sprite(labelMat);
+    sprite.scale.set(2.0, 0.5, 1);
+    sprite.position.set(0, MARKER_HEIGHT + 0.6, 0);
+    cyl.add(sprite);
+
+    cyl.userData = r;
+    scene.add(cyl);
+    markers.push(cyl);
+  });
+
+  // --- Interaction ---
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+  let hovered = null;
+  const infoEl = document.getElementById('info');
+  const infoTitle = document.getElementById('info-title');
+  const infoText = document.getElementById('info-text');
+  const infoLink = document.getElementById('info-link');
+
+  function onPointerMove(e){
+    const rect = renderer.domElement.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+  }
+  renderer.domElement.addEventListener('pointermove', onPointerMove);
+
+  renderer.domElement.addEventListener('click', () => {
+    if(hovered) window.open(hovered.userData.url, '_blank');
+  });
+
+  function showInfo(data){
+    infoTitle.innerText = data.name;
+    infoText.innerText = data.desc;
+    infoLink.href = data.url;
+    infoEl.classList.add('show');
+  }
+
+  window.addEventListener('click', (e)=>{
+    if(!e.target.closest('.info') && !e.target.closest('canvas')){
+      infoEl.classList.remove('show');
+    }
+  });
+
+  // --- Animate ---
+  const clock = new THREE.Clock();
+  function animate(){
+    requestAnimationFrame(animate);
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(markers, true);
+    if(intersects.length){
+      let root = intersects[0].object;
+      while(root && !markers.includes(root)) root = root.parent;
+      if(root && hovered !== root){
+        hovered = root;
+        showInfo(root.userData);
+      }
+    } else {
+      hovered = null;
+    }
+    controls.update();
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', ()=> {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+  </script>
+</body>
+</html>
