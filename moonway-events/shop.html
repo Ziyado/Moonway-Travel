@@ -84,27 +84,31 @@ dir.position.set(5,10,5);
 scene.add(dir);
 
 // Map plane with auto aspect scaling
+// Load the map texture
 const loader = new THREE.TextureLoader();
-const mapTex = loader.load('./assets/egypt-map.png', tex=>{
-  const imgAspect = tex.image.width/tex.image.height;
+const mapTex = loader.load('./assets/egypt-map.png', tex => {
+  tex.encoding = THREE.sRGBEncoding;  // ensures proper colors
+  tex.flipY = false;                  // prevents upside-down texture
+  const imgAspect = tex.image.width / tex.image.height;
   const planeH = 14;
-  const planeW = planeH * imgAspect; // scale width according to aspect
+  const planeW = planeH * imgAspect;   // scale width according to aspect
   mapPlane.geometry = new THREE.PlaneGeometry(planeW, planeH);
 });
-mapTex.encoding = THREE.sRGBEncoding;
-const mapPlane = new THREE.Mesh(new THREE.PlaneGeometry(12,14), new THREE.MeshStandardMaterial({map:mapTex, side:THREE.DoubleSide}));
+
+// Create map plane
+const mapPlane = new THREE.Mesh(
+  new THREE.PlaneGeometry(12, 14),
+  new THREE.MeshStandardMaterial({ map: mapTex, side: THREE.DoubleSide })
+);
 mapPlane.rotation.x = -Math.PI/2;
 mapPlane.position.y = 0.01;
 scene.add(mapPlane);
 
-// Rim
-const rim = new THREE.Mesh(
-  new THREE.RingGeometry(7,7.3,64),
-  new THREE.MeshBasicMaterial({color:0x241812,transparent:true,opacity:0.35,polygonOffset:true,polygonOffsetFactor:1,polygonOffsetUnits:1})
-);
-rim.rotation.x = -Math.PI/2;
-rim.position.y = 0;
-scene.add(rim);
+// Lighting adjustment
+scene.add(new THREE.HemisphereLight(0xffffff, 0x443322, 1)); // increase intensity
+const dir = new THREE.DirectionalLight(0xffffff, 1.2);       // stronger directional light
+dir.position.set(5, 10, 5);
+scene.add(dir);
 
 // Regions
 const regions = [
@@ -216,3 +220,4 @@ window.addEventListener('resize',()=>{
 </script>
 </body>
 </html>
+
