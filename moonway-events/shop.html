@@ -26,6 +26,7 @@
   }
   .info.show{opacity:1; pointer-events:auto; transform: translateY(0);}
   .info h3{margin:0 0 8px;font-size:1.15rem}
+  .info img{width:100%;border-radius:8px;margin-bottom:8px;}
   .info p{margin:0 0 12px;color:#4f3f36;line-height:1.35}
   .info a{display:inline-block;padding:8px 12px;border-radius:999px;background:var(--accent);color:#231a16;text-decoration:none;font-weight:600}
   .legend{position:absolute;left:18px;bottom:18px;color:#f3efe9;background:rgba(0,0,0,.16);padding:8px 12px;border-radius:999px;font-size:.95rem}
@@ -37,25 +38,27 @@
 </style>
 </head>
 <body>
-  <div id="container">
-    <div class="title">Moonway — Explore Egypt</div>
-    <div id="canvas-wrap"></div>
+<div id="container">
+  <div class="title">Moonway — Explore Egypt</div>
+  <div id="canvas-wrap"></div>
 
-    <div class="info" id="info">
-      <h3 id="info-title">Region</h3>
-      <p id="info-text">Short description...</p>
-      <a id="info-link" href="#" target="_blank">Open image</a>
-    </div>
-
-    <div class="legend">Drag to orbit • Click markers</div>
+  <div class="info" id="info">
+    <h3 id="info-title">Region</h3>
+    <img id="info-img" src="" alt="" />
+    <p id="info-text">Short description...</p>
+    <a id="info-link" href="#" target="_blank">Learn more</a>
   </div>
 
+  <div class="legend">Drag to orbit • Click markers</div>
+</div>
+
 <script type="module">
+// Three.js CDN
 import * as THREE from 'https://unpkg.com/three@0.126.1/build/three.module.js';
 import { OrbitControls } from 'https://unpkg.com/three@0.126.1/examples/jsm/controls/OrbitControls.js';
 
-const container = document.getElementById("canvas-wrap");
-const canvasParent = document.getElementById("container");
+const container = document.getElementById('canvas-wrap');
+const canvasParent = document.getElementById('container');
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0f0b08);
@@ -63,6 +66,7 @@ scene.background = new THREE.Color(0x0f0b08);
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.outputEncoding = THREE.sRGBEncoding;  // fixes PNG colors
 canvasParent.insertBefore(renderer.domElement, canvasParent.firstChild);
 
 const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 200);
@@ -81,34 +85,42 @@ const dir = new THREE.DirectionalLight(0xffffff, 0.9);
 dir.position.set(5, 10, 5);
 scene.add(dir);
 
-// --- Map plane ---
+// Map plane
 const loader = new THREE.TextureLoader();
 const PLANE_W = 12;
 const PLANE_H = 14;
-
-const mapTex = loader.load("./assets/egypt-map.png");
-const planeGeo = new THREE.PlaneGeometry(PLANE_W, PLANE_H, 1, 1);
+const mapTex = loader.load('./assets/egypt-map.png');
+mapTex.encoding = THREE.sRGBEncoding;
 const planeMat = new THREE.MeshStandardMaterial({ map: mapTex, side: THREE.DoubleSide });
-const mapPlane = new THREE.Mesh(planeGeo, planeMat);
+const mapPlane = new THREE.Mesh(new THREE.PlaneGeometry(PLANE_W, PLANE_H), planeMat);
 mapPlane.rotation.x = -Math.PI / 2;
+mapPlane.position.y = 0.01;
 scene.add(mapPlane);
 
+// Rim ring
 const rim = new THREE.Mesh(
   new THREE.RingGeometry(PLANE_W*0.5 + 0.05, PLANE_W*0.5 + 0.35, 64),
-  new THREE.MeshBasicMaterial({ color: 0x241812, transparent: true, opacity: 0.35 })
+  new THREE.MeshBasicMaterial({
+    color: 0x241812,
+    transparent: true,
+    opacity: 0.35,
+    polygonOffset: true,
+    polygonOffsetFactor: 1,
+    polygonOffsetUnits: 1
+  })
 );
 rim.rotation.x = -Math.PI/2;
-rim.position.y = -0.01;
+rim.position.y = 0;
 scene.add(rim);
 
-// --- Regions ---
+// Regions
 const regions = [
-  { id:'siwa', name:'Siwa', u:0.07, v:0.18, url:'./assets/places/siwa.jpg', desc:'Siwa Oasis — palms, salt lakes, and Amazigh weaving.' },
-  { id:'oasis', name:'Oasis', u:0.26, v:0.33, url:'./assets/places/oasis.jpg', desc:'Egyptian oases: pottery & palm weaving rooted in desert life.' },
-  { id:'halayeb', name:'Halayeb', u:0.82, v:0.42, url:'./assets/places/halayeb.jpg', desc:'Halayeb — Red Sea mountains, colorful local patterns and crafts.' },
-  { id:'upper', name:'Upper Egypt', u:0.5, v:0.62, url:'./assets/places/upper-egypt.jpg', desc:'Upper Egypt — Nile valley traditions, carvings & textiles.' },
-  { id:'redsea', name:'Red Sea', u:0.78, v:0.66, url:'./assets/places/red-sea.jpg', desc:'Red Sea coast — maritime crafts, shells and rope work.' },
-  { id:'alex', name:'Alexandria', u:0.18, v:0.75, url:'./assets/places/alexandria.jpg', desc:'Alexandria — Mediterranean influence in coastal crafts.' },
+  { id:'siwa', name:'Siwa', u:0.07, v:0.18, img:'./assets/places/siwa.jpg', page:'./places/siwa.html', desc:'Siwa Oasis — palms, salt lakes, and Amazigh weaving.' },
+  { id:'oasis', name:'Oasis', u:0.26, v:0.33, img:'./assets/places/oasis.jpg', page:'./places/oasis.html', desc:'Egyptian oases: pottery & palm weaving rooted in desert life.' },
+  { id:'halayeb', name:'Halayeb', u:0.82, v:0.42, img:'./assets/places/halayeb.jpg', page:'./places/halayeb.html', desc:'Halayeb — Red Sea mountains, colorful local patterns and crafts.' },
+  { id:'upper', name:'Upper Egypt', u:0.5, v:0.62, img:'./assets/places/upper-egypt.jpg', page:'./places/upper-egypt.html', desc:'Upper Egypt — Nile valley traditions, carvings & textiles.' },
+  { id:'redsea', name:'Red Sea', u:0.78, v:0.66, img:'./assets/places/red-sea.jpg', page:'./places/red-sea.html', desc:'Red Sea coast — maritime crafts, shells and rope work.' },
+  { id:'alex', name:'Alexandria', u:0.18, v:0.75, img:'./assets/places/alexandria.jpg', page:'./places/alexandria.html', desc:'Alexandria — Mediterranean influence in coastal crafts.' },
 ];
 
 const markers = [];
@@ -139,7 +151,7 @@ regions.forEach(r=>{
   ctx.textAlign = 'center'; ctx.textBaseline='middle';
   ctx.fillText(r.name, 256, 64);
   const labelTex = new THREE.CanvasTexture(canvas);
-  labelTex.colorSpace = THREE.SRGBColorSpace;
+  labelTex.encoding = THREE.sRGBEncoding;
   const labelMat = new THREE.SpriteMaterial({ map: labelTex, transparent: true });
   const sprite = new THREE.Sprite(labelMat);
   sprite.scale.set(2.0, 0.5, 1);
@@ -151,13 +163,14 @@ regions.forEach(r=>{
   markers.push(cyl);
 });
 
-// --- Interaction ---
+// Interaction
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 let hovered = null;
 const infoEl = document.getElementById('info');
 const infoTitle = document.getElementById('info-title');
 const infoText = document.getElementById('info-text');
+const infoImg = document.getElementById('info-img');
 const infoLink = document.getElementById('info-link');
 
 function onPointerMove(e){
@@ -167,16 +180,17 @@ function onPointerMove(e){
 }
 renderer.domElement.addEventListener('pointermove', onPointerMove);
 
-renderer.domElement.addEventListener('click', () => {
-  if(hovered) window.open(hovered.userData.url, '_blank');
-});
-
 function showInfo(data){
   infoTitle.innerText = data.name;
   infoText.innerText = data.desc;
-  infoLink.href = data.url;
+  infoImg.src = data.img;
+  infoLink.href = data.page;
   infoEl.classList.add('show');
 }
+
+renderer.domElement.addEventListener('click', () => {
+  if(hovered) window.location.href = hovered.userData.page;
+});
 
 window.addEventListener('click', (e)=>{
   if(!e.target.closest('.info') && !e.target.closest('canvas')){
@@ -184,6 +198,7 @@ window.addEventListener('click', (e)=>{
   }
 });
 
+// Animate
 function animate(){
   requestAnimationFrame(animate);
   raycaster.setFromCamera(mouse, camera);
@@ -211,4 +226,3 @@ window.addEventListener('resize', ()=> {
 </script>
 </body>
 </html>
-
