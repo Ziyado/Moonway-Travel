@@ -51,9 +51,8 @@
   </div>
 
 <script type="module">
-// ✅ CDN imports for GitHub Pages
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
-import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js";
+import * as THREE from 'https://unpkg.com/three@0.126.1/build/three.module.js';
+import { OrbitControls } from 'https://unpkg.com/three@0.126.1/examples/jsm/controls/OrbitControls.js';
 
 const container = document.getElementById("canvas-wrap");
 const canvasParent = document.getElementById("container");
@@ -212,3 +211,4 @@ window.addEventListener('resize', ()=> {
 </script>
 </body>
 </html>
+
